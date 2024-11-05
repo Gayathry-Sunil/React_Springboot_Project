@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { AppContext } from '../context/AppContext'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -44,3 +45,4 @@ const RelatedDoctors = ({speciality,docId}) => {
 }
 
 export default RelatedDoctors
+
