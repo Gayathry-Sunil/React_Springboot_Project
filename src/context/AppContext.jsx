@@ -1,23 +1,24 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 import { doctors } from "../assets/assets";
 
-export const AppContext = createContext()
+export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
-
-
-    const currencySymbol = '₹'
+    const currencySymbol = '₹';
+    const [token, setToken] = useState(false); 
 
     const value = {
         doctors,
-        currencySymbol
-    }
+        currencySymbol,
+        token,
+        setToken, 
+    };
 
     return (
         <AppContext.Provider value={value}>
             {props.children}
         </AppContext.Provider>
-    )
-}
+    );
+};
 
-export default AppContextProvider
+export default AppContextProvider;
