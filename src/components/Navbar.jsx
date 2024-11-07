@@ -55,10 +55,10 @@ const Navbar = () => {
                         <img className='w-7'onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt=""/>
                     </div>
                     <ul className='flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium'>
-                        <NavLink className='px-4 py-2 rounded full inline-block' onClick={()=>setShowMenu(false)} to='/'>HOME</NavLink> 
-                        <NavLink className='px-4 py-2 rounded full inline-block' onClick={()=>setShowMenu(false)} to='/doctors'>ALL DOCTORS</NavLink>
-                        <NavLink className='px-4 py-2 rounded full inline-block' onClick={()=>setShowMenu(false)} to='/about'>ABOUT</NavLink>
-                        <NavLink className='px-4 py-2 rounded full inline-block' onClick={()=>setShowMenu(false)} to='/contact'>CONTACT</NavLink>
+                        <NavLink onClick={()=>setShowMenu(false)} to='/'><p className='px-4 py-2 rounded full inline-block'>HOME</p></NavLink> 
+                        <NavLink onClick={()=>setShowMenu(false)} to='/doctors'><p className='px-4 py-2 rounded full inline-block'>ALL DOCTORS</p></NavLink>
+                        <NavLink onClick={()=>setShowMenu(false)} to='/about'><p className='px-4 py-2 rounded full inline-block'>ABOUT</p></NavLink>
+                        <NavLink onClick={()=>setShowMenu(false)} to='/contact'><p className='px-4 py-2 rounded full inline-block'>CONTACT</p></NavLink>
                     </ul>
                 </div>
             </div> 
