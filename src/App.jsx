@@ -12,6 +12,8 @@ import Appointment from './pages/Appointment';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Admin from './pages/Admin';
+import DoctorAdminLogin from './components/DoctorAdminLogin';
+import DoctorPanel from './components/doctor/DoctorPanel';
 
 const App = () => {
   // Use location to check if the current route is under the admin section
@@ -33,9 +35,14 @@ const App = () => {
         <Route path="/my-profile" element={<MyProfile />} />
         <Route path="/my-appointments" element={<MyAppointments />} />
         <Route path="/appointment/:docId" element={<Appointment />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/doctor-login" element={<DoctorAdminLogin />} />
+        <Route path="/admin/*" element={<Admin />} />
+        <Route path="/doctor/:id" element={<DoctorPanel />} />
         
         {/* Admin routes */}
-        <Route path="/admin/*" element={<Admin />} />
+      
       </Routes>
       
       <Footer />

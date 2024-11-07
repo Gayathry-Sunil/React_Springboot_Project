@@ -1,0 +1,44 @@
+.doctor-panel {
+    padding: 20px;
+    background-color: #f9f9fc;
+}
+
+.doctor-panel-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.stats-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.appointments-table {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+.appointments-table th, .appointments-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.appointments-table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    color: #4f46e5;
+}
+
+.appointments-table tr:last-child td {
+    border-bottom: none;
+}
