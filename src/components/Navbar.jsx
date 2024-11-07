@@ -50,19 +50,19 @@ const Navbar = () => {
                 <img onClick={()=>setShowMenu(true)} className='w-6 md:hidden' src={assets.menu_icon} alt=""/>
                 {/*----------Mobile menu-------------*/}
                 <div className={` ${showMenu ? 'fixed w-full' : 'h-0 w-0'} md:hidden right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all`}>
-                    <div>
-                        <img src={assets.logo} alt=""/>
-                        <img onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt=""/>
+                    <div className='flex items-center justify-between px-5 py-6'>
+                        <img className='w-22'src={assets.logo} alt=""/>
+                        <img className='w-7'onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt=""/>
                     </div>
-                    <ul>
-                        <NavLink>HOME</NavLink>
-                        <NavLink>ALL DOCTORS</NavLink>
-                        <NavLink>ABOUT</NavLink>
-                        <NavLink>CONTACT</NavLink>
+                    <ul className='flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium'>
+                        <NavLink onClick={()=>setShowMenu(false)} to='/'><p className='px-4 py-2 rounded full inline-block'>HOME</p></NavLink> 
+                        <NavLink onClick={()=>setShowMenu(false)} to='/doctors'><p className='px-4 py-2 rounded full inline-block'>ALL DOCTORS</p></NavLink>
+                        <NavLink onClick={()=>setShowMenu(false)} to='/about'><p className='px-4 py-2 rounded full inline-block'>ABOUT</p></NavLink>
+                        <NavLink onClick={()=>setShowMenu(false)} to='/contact'><p className='px-4 py-2 rounded full inline-block'>CONTACT</p></NavLink>
                     </ul>
                 </div>
-            </div>
-        </div>
+            </div> 
+        </div>    
     )
 }
 
