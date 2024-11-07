@@ -42,6 +42,13 @@ const TopDoctors = () => {
     const [doctors, setDoctors] = useState([]);
     const navigate = useNavigate();
 
+    
+    const { doctors } = useContext(AppContext)
+    const { setToken } = useContext(AppContext)
+
+    useEffect(() => {
+        setToken(true);
+    }, [setToken]);
     useEffect(() => {
         axios.get('http://localhost:8080/doctors')
             .then(response => {

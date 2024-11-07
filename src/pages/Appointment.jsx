@@ -1,14 +1,18 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { assets } from '../assets/assets'
 import RelatedDoctors from '../components/RelatedDoctors'
+import { bookDoctor, checkCount } from '../services/AllAPIs'
+
 
 const Appointment = () => {
 
+    const { setToken } = useContext(AppContext);
+    const navigate = useNavigate();
     const { docId } = useParams()
     const { doctors, currencySymbol } = useContext(AppContext)
     const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -17,6 +21,8 @@ const Appointment = () => {
     const [docSlots, setDocSlots] = useState([])
     const [slotIndex, setSlotIndex] = useState(0)
     const [slotTime, setSlotTime] = useState('')
+
+    const [bookingCount, setbookingCount] = useState(false) // count status of particular doc
 
     const fetchDocInfo = async () => {
         const docInfo = doctors.find(doc => doc._id === docId)
@@ -68,6 +74,9 @@ const Appointment = () => {
         }
 
     }
+    useEffect(() => {
+        setToken(true);
+    }, [setToken]);
 
     useEffect(() => {
         fetchDocInfo()
@@ -80,6 +89,61 @@ const Appointment = () => {
     useEffect(() => {
         console.log(docSlots);
     }, [docSlots])
+
+    const handleBooking = async () => {
+        try {
+
+            const date = docSlots[slotIndex][0].datetime.toISOString().split('T')[0];
+            const time = slotTime;
+            const countResponse = await checkCount(docId, date, time);
+
+
+            if (countResponse < 5) {
+                handleBookAppointment();
+            }
+            else {
+                alert('The booking for particular slot is finished. Try booking another slot as early as possible.Thank You');
+            }
+
+
+        } catch (error) {
+            console.error('Error booking appointment:', error);
+            alert('booking count cannot fetch');
+        }
+
+    };
+
+
+    const handleBookAppointment = async () => {
+
+
+        const storedUser = sessionStorage.getItem('user');
+        const user = storedUser ? JSON.parse(storedUser) : null;
+        console.log(user.id);
+
+        if (!user || !user.id) {
+            alert('Patient ID not found. Please log in again.');
+            return;
+        }
+
+        const bookingDetails = {
+            patientId: user.id,
+            docId: docId,
+            date: docSlots[slotIndex][0].datetime.toISOString().split('T')[0],
+            time: slotTime
+        };
+
+
+        try {
+            await bookDoctor(bookingDetails);
+            alert('Appointment booked successfully!');
+            navigate("/");
+
+        } catch (error) {
+            console.error('Error booking appointment:', error);
+            alert('Failed to book appointment. Please try again.');
+        }
+    };
 
     return docInfo && (
         <div>
@@ -128,12 +192,16 @@ const Appointment = () => {
 
                 <div className='flex items-center gap-3 w-full overflow-x-scroll mt-4'>
                     {docSlots.length && docSlots[slotIndex].map((item, index) => (
-                        <p onClick={()=>setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-gray-400 border border-gray-300'}`} key={index}>
+                        <p onClick={() => setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-gray-400 border border-gray-300'}`} key={index}>
                             {item.time.toLowerCase()}
                         </p>
                     ))}
                 </div>
-               <button className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'>Book an appointment</button> 
+                <button
+                    onClick={handleBooking}
+
+                    className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'>Book an appointment
+                </button>
             </div>
 
             {/* Listing Related Doctors */}
