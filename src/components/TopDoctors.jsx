@@ -34,7 +34,8 @@
 
 // export default TopDoctors
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -42,8 +43,6 @@ const TopDoctors = () => {
     const [doctors, setDoctors] = useState([]);
     const navigate = useNavigate();
 
-    
-    const { doctors } = useContext(AppContext)
     const { setToken } = useContext(AppContext)
 
     useEffect(() => {
