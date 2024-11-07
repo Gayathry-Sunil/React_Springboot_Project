@@ -3,10 +3,9 @@
   display: flex;
   background-color: #f8f9fc;
   min-height: 100vh;
-  width: 100%; /* Ensure the dashboard spans the full width */
-  margin-top: 80px; /* Adjust this value based on your header height */
+  width: 105rem; 
+  margin-top: 80px; 
 }
-
 /* Admin Header Styles */
 .admin-header {
   display: flex;
@@ -56,6 +55,7 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0; /* Prevent sidebar from shrinking */
+  margin-left: -10rem;
 }
 
 .sidebar a {
@@ -101,5 +101,6 @@
 .admin-content {
   flex: 1;
   padding: 20px;
-  margin-top: 20px; /* Ensure content starts below the fixed header */
+  margin-top: 20px;
+
 }
