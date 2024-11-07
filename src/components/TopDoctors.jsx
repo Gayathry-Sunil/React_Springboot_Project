@@ -1,13 +1,18 @@
 import React from 'react'
 import { doctors } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext,useEffect } from 'react'
 import { AppContext } from '../context/AppContext'
 
 const TopDoctors = () => {
 
     const navigate = useNavigate()
     const { doctors } = useContext(AppContext)
+    const { setToken } = useContext(AppContext)
+
+    useEffect(() => {
+        setToken(true);
+    }, [setToken]);
 
     return (
         <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
