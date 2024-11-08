@@ -1,45 +1,78 @@
-// src/components/admin/DoctorList.jsx
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../context/AppContext';
 import './AdminPanel.css';
+import { getDoctors, deleteDoctor } from '../../services/AllAPIs';
 
 const DoctorList = () => {
-  const { doctors } = useContext(AppContext); // Assuming doctors data is provided via context
   const [doctorList, setDoctorList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Function to fetch doctors from API
+  const fetchDoctors = async () => {
+    try {
+      setLoading(true);
+      const response = await getDoctors(); // Make sure serverUrl is defined
+      console.log(response);
+      setDoctorList(response);  // Set fetched data to doctorList state
+      setLoading(false);
+    } catch (err) {
+      setError("Failed to fetch doctors.");
+      setLoading(false);
+    }
+  };
+
+  // Function to handle delete request
+  const handleDelete = async (id, doctorName) => {
+    // Ask for confirmation before deleting
+    const confirmDelete = window.confirm(`Do you want to delete ${doctorName}?`);
+
+    if (confirmDelete) {
+      try {
+        const response = await deleteDoctor(id);
+        alert("Deleted Successfully");
+        fetchDoctors();  // Refresh the doctor list after deletion
+      } catch (error) {
+        alert("Error deleting doctor.");
+      }
+    }
+  };
+
+  // Fetch doctors when the component mounts
   useEffect(() => {
-    // Load doctors from context or any API
-    setDoctorList(doctors);
-  }, [doctors]);
+    fetchDoctors();
+  }, []);
+
+  // Display loading or error message if needed
+  if (loading) return <p>Loading doctors...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
       <p className='text-gray-600'>Manage doctors in the admin panel.</p>
       <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
         <div className='w-full grid grid-cols-auto gap-4 gap-y-6'>
-          {
-            doctorList.map((item, index) => (
-              <div className='border border-blue-200 rounded-x1 overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' key={index}>
-                <img className='bg-blue-50' src={item.image} alt="" />
-                <div className='p-4'>
-                  <div className='flex items-center gap-2 text-sm text-center text-green-500'>
-                    <p className='w-2 h-2 bg-green-500 rounded-full'></p><p>Available</p>
-                  </div>
-                  <p className='text-gray-900 text-lg font-medium'>{item.name}</p>
-                  <p className='text-gray-600 text-sm'>{item.speciality}</p>
-                  <p className='text-gray-600 text-sm'>{item.email}</p>
-                  <p className='text-gray-600 text-sm'>{item.experience} years experience</p>
-                  <p className='text-gray-600 text-sm'>Fees: {item.fees}</p>
-                  <div className="flex gap-2 mt-2">
-                    <button className="bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600" onClick={() => navigate(`/admin/edit-doctor/${item._id}`)}>Edit</button>
-                    <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onClick={() => navigate(`/admin/delete-doctor/${item._id}`)}>Delete</button>
-                  </div>
+          {doctorList.map((item, index) => (
+            <div className='border border-blue-200 rounded-x1 overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' key={index}>
+              <img className='bg-blue-50' src={`data:image/png;base64,${item.doctorImage}`} alt={item.doctorName} />
+              <div className='p-4'>
+                <div className='flex items-center gap-2 text-sm text-center text-green-500'>
+                  <p className='w-2 h-2 bg-green-500 rounded-full'></p>
+                  <p>Available</p>
+                </div>
+                <p className='text-gray-900 text-lg font-medium'>{item.doctorName}</p>
+                <p className='text-gray-600 text-sm'>{item.doctorSpeciality}</p>
+                <p className='text-gray-600 text-sm'>{item.doctorEmail}</p>
+                <p className='text-gray-600 text-sm'>{item.doctorExperience} years experience</p>
+                <p className='text-gray-600 text-sm'>Fees: {item.doctorFees}</p>
+                <div className="flex gap-2 mt-2">
+                  <button className="bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600" onClick={() => navigate(`/admin/edit-doctor/${item.id}`)}>Edit</button>
+                  <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(item.id, item.doctorName)}>Delete</button>
                 </div>
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
       </div>
     </div>

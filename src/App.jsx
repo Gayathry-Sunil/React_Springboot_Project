@@ -13,6 +13,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Admin from './pages/Admin';
 
+
 const App = () => {
   // Use location to check if the current route is under the admin section
   const location = useLocation();
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/appointment/:docId" element={<Appointment />} />
         
         {/* Admin routes */}
+       
         <Route path="/admin/*" element={<Admin />} />
       </Routes>
       
