@@ -5,6 +5,12 @@
     background-color: #f8f9fc;
     border-radius: 8px;
   }
+  .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px; /* Adds spacing above the error message */
+    display: block; /* Forces the message to appear below the input */
+  }
   
   .page-title {
     font-size: 24px;
