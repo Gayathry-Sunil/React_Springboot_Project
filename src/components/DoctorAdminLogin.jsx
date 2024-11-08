@@ -1,4 +1,4 @@
-// src/components/DoctorAdminLogin.jsx
+// DoctorAdminLogin.jsx
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
@@ -18,12 +18,13 @@ const DoctorAdminLogin = () => {
             if (email === "doctor@example.com" && password === "1234") {
                 // Mock doctor response
                 const response = { id: "123" }; // Example response for doctor
+                // Correctly navigate to the doctor’s specific page, with their ID
                 navigate(`/doctor/${response.id}/appointments`); // Redirect to doctor's appointments page
             } else {
                 alert("Invalid credentials");
             }
 
-            // // Uncomment and replace with actual API call for checking doctor credentials
+            // Uncomment and replace with actual API call for checking doctor credentials
             // const response = await checkDoctorCredentials(email, password);
             // if (response) {
             //     navigate(`/doctor/${response.id}`); // Redirect to doctor's appointments page

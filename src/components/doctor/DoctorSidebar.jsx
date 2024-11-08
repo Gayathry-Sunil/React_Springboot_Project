@@ -4,7 +4,12 @@ import { FaTachometerAlt, FaUserMd, FaUsers } from 'react-icons/fa'; // Import i
 
 function DoctorSidebar() {
 
-    const { id } = useParams(); // Get doctor ID from URL parameters
+  const { id } = useParams(); // Get the doctor ID from the URL
+
+  if (!id) {
+      return <p>Doctor ID is missing. Please log in again.</p>; // Show a message if ID is missing
+  }
+
 
   return (
     <div className="sidebar">
