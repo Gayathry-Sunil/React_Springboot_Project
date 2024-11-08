@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { savePatient, checkUser, checkEmail } from '../services/AllAPIs';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -132,6 +133,9 @@ const Login = () => {
                 ) : (
                     <p>Don't have an account? <span onClick={() => setState('Sign Up')} className='text-primary underline cursor-pointer'>Click here</span></p>
                 )}
+
+                <p>Doctor login? <Link to="/doctor-login" className='text-primary underline'>Click here</Link></p>
+        
             </div>
         </form>
     );
