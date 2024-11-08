@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../admin/AddDoctorForm.css'; // Import CSS for styling
+import './DoctorProfileForm.css'; // Import CSS for styling
 
 function DoctorProfileForm() {
   const [form, setForm] = useState({
@@ -27,10 +27,10 @@ function DoctorProfileForm() {
 
   return (
     <div className="add-doctor-page">
-      <h2 className="page-title">Edite Profile</h2>
+      <h2 className="page-title">Edit Profile</h2>
       <form onSubmit={handleSubmit} className="add-doctor-form">
         <div className="form-section">
-          <label>Upload doctor picture</label>
+          <label>Upload profile picture  </label>
           <input type="file" name="picture" onChange={handleChange} />
         </div>
         

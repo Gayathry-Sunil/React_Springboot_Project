@@ -55,10 +55,11 @@ const DoctorPanel = () => {
                 <p>Welcome, {doctorId}</p>
             </header>
             <div className="stats-card">
-                <h2>Accepted Appointments</h2>
+                <h2><b>Accepted Appointments</b></h2>
                 <span>{totalPatients}</span>
             </div>
-            <h2>Pending Appointments</h2>
+            <h2 className="table-heading"><b>Pending Appointments</b></h2>
+            <br />
             <table className="appointments-table">
                 <thead>
                     <tr>
@@ -100,7 +101,8 @@ const DoctorPanel = () => {
                         ))}
                 </tbody>
             </table>
-            <h2>Accepted Queue</h2>
+            <h2 className="table-heading"><b>Accepted Queue</b></h2>
+            <br />
             <table className="appointments-table">
                 <thead>
                     <tr>

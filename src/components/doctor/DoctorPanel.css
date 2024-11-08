@@ -121,3 +121,17 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
+
+/* DoctorPanel.css */
+.doctor-panel {
+    padding: 20px;
+    background-color: #f9f9fc;
+    margin-left: auto; /* Center-align within the available space */
+    margin-right: auto;
+    max-width: 1200px; /* Add a max-width to avoid it stretching too wide */
+}
+
+.table-heading {
+    font-size: larger;
+}
