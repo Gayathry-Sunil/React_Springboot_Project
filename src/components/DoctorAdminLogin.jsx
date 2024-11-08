@@ -15,10 +15,10 @@ const DoctorAdminLogin = () => {
             navigate("/admin"); // Admin dashboard route
         } else {
             // Dummy hardcoded doctor credentials
-            if (email === "doctor@example.com" && password === "doctorpassword") {
+            if (email === "doctor@example.com" && password === "1234") {
                 // Mock doctor response
                 const response = { id: "123" }; // Example response for doctor
-                navigate(`/doctor/${response.id}`); // Redirect to doctor's appointments page
+                navigate(`/doctor/${response.id}/doctor`); // Redirect to doctor's appointments page
             } else {
                 alert("Invalid credentials");
             }
