@@ -25,7 +25,7 @@ function AddDoctorForm() {
     const newErrors = {};
 
     // Name validation: no numbers
-    if (touched.name && !/^[a-zA-Z\s]+$/.test(form.name)) {
+    if (touched.name && !/^[.a-zA-Z\s]+$/.test(form.name)) {
       newErrors.name = 'Name should not contain numbers.';
     }
 

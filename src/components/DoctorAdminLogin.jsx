@@ -12,7 +12,7 @@ const DoctorAdminLogin = () => {
     const handleLogin = async () => {
         // Dummy hardcoded admin credentials
         if (email === "admin@example.com" && password === "1234") {
-            navigate("/admin"); // Admin dashboard route
+            navigate("/admin/dashboard"); // Admin dashboard route
         } else {
             // Dummy hardcoded doctor credentials
             if (email === "doctor@example.com" && password === "1234") {

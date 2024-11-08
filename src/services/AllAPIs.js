@@ -25,7 +25,8 @@ export const checkUser = async (emailId, patientPassword) => {
 }
 
 export const checkEmail = async (email) => {
-    const reponse = await CommonAPIs("GET", `${serverUrl}/patient/check?emailId=${emailId}`);
+    const reponse = await CommonAPIs("GET", `${serverUrl}/patient/check?emailId=${email}`);
+    
     return reponse.data;
 }
 
@@ -40,9 +41,24 @@ export const getDoctors = async () => {
 }
 
 
+export const deleteDoctor = async (id) => {
+    const response = await CommonAPIs("DELETE", `${serverUrl}/doctor/delete/${id}`);
+    return response;
+}
+
+
+
+export const fetchAppointments = async (id) => {
+      const response = await CommonAPIs("GET", `${serverUrl}/book/appoinment/${id}`); 
+      console.log(response);
+      return response.data;
+  
+}
+  
+
+
 export const getDoctorById = async (docId) => {
     try {
-      console.log("Checkinggggggggggggggg.............");
       const response = await fetch(`${serverUrl}/doctor/${docId}`, {
         method: "GET",
         headers: {
@@ -60,3 +76,6 @@ export const getDoctorById = async (docId) => {
       throw error;
     }
   };
+
+
+

@@ -15,6 +15,7 @@ import Admin from './pages/Admin';
 import DoctorAdminLogin from './components/DoctorAdminLogin';
 import DoctorPage from './pages/DoctorPage';
 
+
 const App = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
