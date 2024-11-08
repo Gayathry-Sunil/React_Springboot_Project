@@ -33,7 +33,7 @@ const DoctorList = () => {
                   <p className='text-gray-600 text-sm'>{item.experience} years experience</p>
                   <p className='text-gray-600 text-sm'>Fees: {item.fees}</p>
                   <div className="flex gap-2 mt-2">
-                    <button className="bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600" onClick={() => navigate(`/admin/edit-doctor/${item._id}`)}>Edit</button>
+                 
                     <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onClick={() => navigate(`/admin/delete-doctor/${item._id}`)}>Delete</button>
                   </div>
                 </div>

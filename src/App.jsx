@@ -1,4 +1,4 @@
-// src/App.jsx
+// App.jsx
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
@@ -12,15 +12,15 @@ import Appointment from './pages/Appointment';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Admin from './pages/Admin';
+import DoctorAdminLogin from './components/DoctorAdminLogin';
+import DoctorPage from './pages/DoctorPage';
 
 const App = () => {
-  // Use location to check if the current route is under the admin section
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
     <div className="mx-4 sm:mx-[10%]">
-      {/* Conditionally render Navbar or AdminHeader */}
       {isAdminRoute ? null : <Navbar />}
       
       <Routes>
@@ -33,9 +33,10 @@ const App = () => {
         <Route path="/my-profile" element={<MyProfile />} />
         <Route path="/my-appointments" element={<MyAppointments />} />
         <Route path="/appointment/:docId" element={<Appointment />} />
-        
-        {/* Admin routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/doctor-login" element={<DoctorAdminLogin />} />
         <Route path="/admin/*" element={<Admin />} />
+        <Route path="/doctor/:id/*" element={<DoctorPage />} />
       </Routes>
       
       <Footer />
