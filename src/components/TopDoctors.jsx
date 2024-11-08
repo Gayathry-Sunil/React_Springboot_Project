@@ -2,6 +2,7 @@ import React, { useEffect, useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext'
+import serverUrl from "../services/BaseUrl";
 
 const TopDoctors = () => {
     const [doctors, setDoctors] = useState([]);
@@ -13,7 +14,7 @@ const TopDoctors = () => {
         setToken(true);
     }, [setToken]);
     useEffect(() => {
-        axios.get('http://localhost:8080/doctors')
+        axios.get(`${serverUrl}/doctors`)
             .then(response => {
                 setDoctors(response.data);
             })

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import serverUrl from "../services/BaseUrl";
 import axios from "axios";
 
 const Doctors = () => {
@@ -14,7 +15,7 @@ const Doctors = () => {
   const fetchDoctors = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8080/doctors");
+      const response = await axios.get(`${serverUrl}/doctors`);
       setDoctors(response.data);
       setLoading(false);
     } catch (err) {
