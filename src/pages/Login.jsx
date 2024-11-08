@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { savePatient, checkUser,checkEmail } from '../services/AllAPIs';
+import { savePatient, checkUser, checkEmail } from '../services/AllAPIs';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { setToken } = useContext(AppContext); // Import setToken from context
+    const { setToken } = useContext(AppContext); 
     const [state, setState] = useState('Sign Up');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -34,24 +34,23 @@ const Login = () => {
         }
     };
 
-    const alreadyUser = async(email) => {
-        try{
+    const alreadyUser = async (email) => {
+        try {
             const response = await checkEmail(email);
-            if(response){
-                return false;
-            }
-        }catch (error) {
-            console.error('Error registering patient:', error);
+            console.log(response);  // Check the response in console
+            return response !== -1;  // Return true if email exists, false if not
+        } catch (error) {
+            console.error('Error checking email:', error);
+            return false;
         }
-    }
-
+    };
 
     const addPatient = async () => {
         if (!validateEmail(email)) {
             alert("Please enter a valid email address.");
             return;
         }
-        else if(alreadyUser(email)){
+        if (await alreadyUser(email)) {  // Await the result of alreadyUser
             alert("User Already Exists. Check your email");
             setEmail('');
             return;
@@ -75,7 +74,6 @@ const Login = () => {
         }
     };
 
-    
     return (
         <form className='min-h-[80vh] flex items-center' onSubmit={onSubmitHandler}>
             <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg'>

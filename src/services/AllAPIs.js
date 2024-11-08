@@ -14,6 +14,10 @@ export const savePatient = (patientDetails) => {
     CommonAPIs("POST", `${serverUrl}/patient`, patientDetails);
 }
 
+export const saveDoctor = (doctorDetails) => {
+    CommonAPIs("POST", `${serverUrl}/doctor/add`, doctorDetails);
+}
+
 export const checkUser = async (emailId, patientPassword) => {
     const response = await CommonAPIs("GET", `${serverUrl}/patient/userlogin?emailId=${emailId}&patientPassword=${patientPassword}`);
     return response.data;
@@ -21,11 +25,57 @@ export const checkUser = async (emailId, patientPassword) => {
 }
 
 export const checkEmail = async (email) => {
-    const reponse = await CommonAPIs("GET",`${serverUrl}/patient/check?emailId=${emailId}`);
+    const reponse = await CommonAPIs("GET", `${serverUrl}/patient/check?emailId=${email}`);
+    
     return reponse.data;
 }
 
 export const updateUser = (userData) => {
     console.log(userData);
-    CommonAPIs("PUT",`${serverUrl}/patient/update`,userData);
+    CommonAPIs("PUT", `${serverUrl}/patient/update`, userData);
 }
+
+export const getDoctors = async () => {
+    const reponse = await CommonAPIs("GET", `${serverUrl}/doctor/alldoctors`);
+    return reponse.data;
+}
+
+
+export const deleteDoctor = async (id) => {
+    const response = await CommonAPIs("DELETE", `${serverUrl}/doctor/delete/${id}`);
+    return response;
+}
+
+
+
+export const fetchAppointments = async (id) => {
+      const response = await CommonAPIs("GET", `${serverUrl}/book/appoinment/${id}`); 
+      console.log(response);
+      return response.data;
+  
+}
+  
+
+
+export const getDoctorById = async (docId) => {
+    try {
+      const response = await fetch(`${serverUrl}/doctor/${docId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Doctor not found (Status: ${response.status})`);
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching doctor details:", error);
+      throw error;
+    }
+  };
+
+
+
