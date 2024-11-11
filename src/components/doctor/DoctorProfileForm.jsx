@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './DoctorProfileForm.css'; // Import CSS for styling
 
+
+
 function DoctorProfileForm() {
   const [form, setForm] = useState({
     name: '',

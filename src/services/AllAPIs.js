@@ -18,6 +18,10 @@ export const saveDoctor = (doctorDetails) => {
     CommonAPIs("POST", `${serverUrl}/doctor/add`, doctorDetails);
 }
 
+export const handleCancelledBooking = (bookingDetails) => {
+  CommonAPIs("POST", `${serverUrl}/cancel`, bookingDetails);
+}
+
 export const checkUser = async (emailId, patientPassword) => {
     const response = await CommonAPIs("GET", `${serverUrl}/patient/userlogin?emailId=${emailId}&patientPassword=${patientPassword}`);
     return response.data;
@@ -46,14 +50,19 @@ export const deleteDoctor = async (id) => {
     return response;
 }
 
+export const deleteAppointment = async (id) => {
+  
+  const response = await CommonAPIs("DELETE", `${serverUrl}/book/delete/${id}`);
+  return response;
+};
+
 
 
 export const fetchAppointments = async (id) => {
       const response = await CommonAPIs("GET", `${serverUrl}/book/appoinment/${id}`); 
-      console.log(response);
       return response.data;
   
-}
+};
   
 
 
