@@ -18,6 +18,10 @@ export const saveDoctor = (doctorDetails) => {
     CommonAPIs("POST", `${serverUrl}/doctor/add`, doctorDetails);
 }
 
+export const handleCancelledBooking = (bookingDetails) => {
+  CommonAPIs("POST", `${serverUrl}/cancel`, bookingDetails);
+}
+
 export const checkUser = async (emailId, patientPassword) => {
     const response = await CommonAPIs("GET", `${serverUrl}/patient/userlogin?emailId=${emailId}&patientPassword=${patientPassword}`);
     return response.data;
@@ -35,6 +39,11 @@ export const updateUser = (userData) => {
     CommonAPIs("PUT", `${serverUrl}/patient/update`, userData);
 }
 
+export const updateDoctor =  (doctorData) => {
+  CommonAPIs("PUT", `${serverUrl}/doctor/update`, doctorData);
+};
+
+
 export const getDoctors = async () => {
     const reponse = await CommonAPIs("GET", `${serverUrl}/doctor/alldoctors`);
     return reponse.data;
@@ -46,13 +55,32 @@ export const deleteDoctor = async (id) => {
     return response;
 }
 
+export const deleteAppointment = async (id) => {
+  
+  const response = await CommonAPIs("DELETE", `${serverUrl}/book/delete/${id}`);
+  return response;
+};
+
 
 
 export const fetchAppointments = async (id) => {
       const response = await CommonAPIs("GET", `${serverUrl}/book/appoinment/${id}`); 
-      console.log(response);
       return response.data;
   
+};
+
+export const fetchCancelled = async (id) => {
+  const response = await CommonAPIs("GET", `${serverUrl}/cancel/booking/${id}`); 
+  return response.data;
+
+};
+
+
+
+export const checkDoctor = async (emailId, Password) => {
+  const response = await CommonAPIs("GET", `${serverUrl}/doctor/check?email=${emailId}&password=${Password}`);
+  return response.data;
+
 }
   
 
