@@ -39,6 +39,11 @@ export const updateUser = (userData) => {
     CommonAPIs("PUT", `${serverUrl}/patient/update`, userData);
 }
 
+export const updateDoctor =  (doctorData) => {
+  CommonAPIs("PUT", `${serverUrl}/doctor/update`, doctorData);
+};
+
+
 export const getDoctors = async () => {
     const reponse = await CommonAPIs("GET", `${serverUrl}/doctor/alldoctors`);
     return reponse.data;
@@ -63,6 +68,20 @@ export const fetchAppointments = async (id) => {
       return response.data;
   
 };
+
+export const fetchCancelled = async (id) => {
+  const response = await CommonAPIs("GET", `${serverUrl}/cancel/booking/${id}`); 
+  return response.data;
+
+};
+
+
+
+export const checkDoctor = async (emailId, Password) => {
+  const response = await CommonAPIs("GET", `${serverUrl}/doctor/check?email=${emailId}&password=${Password}`);
+  return response.data;
+
+}
   
 
 

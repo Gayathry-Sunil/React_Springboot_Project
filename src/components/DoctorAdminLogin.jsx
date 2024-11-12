@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
+import {checkDoctor} from '../services/AllAPIs';
 
 const DoctorAdminLogin = () => {
     const navigate = useNavigate();
@@ -14,23 +15,15 @@ const DoctorAdminLogin = () => {
         if (email === "admin@example.com" && password === "1234") {
             navigate("/admin/dashboard"); // Admin dashboard route
         } else {
-            // Dummy hardcoded doctor credentials
-            if (email === "doctor@example.com" && password === "1234") {
-                // Mock doctor response
-                const response = { id: "123" }; // Example response for doctor
-                // Correctly navigate to the doctor’s specific page, with their ID
+            
+
+            // Uncomment and replace with actual API call for checking doctor credentials
+            const response = await checkDoctor(email, password);
+            if (response) {
                 navigate(`/doctor/${response.id}/appointments`); // Redirect to doctor's appointments page
             } else {
                 alert("Invalid credentials");
             }
-
-            // Uncomment and replace with actual API call for checking doctor credentials
-            // const response = await checkDoctorCredentials(email, password);
-            // if (response) {
-            //     navigate(`/doctor/${response.id}`); // Redirect to doctor's appointments page
-            // } else {
-            //     alert("Invalid credentials");
-            // }
         }
     };
 
