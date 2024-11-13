@@ -9,7 +9,13 @@ const TopDoctors = () => {
     const { setToken } = useContext(AppContext);
 
     useEffect(() => {
-        setToken(true);
+        // setToken(true);
+        const storedUser = sessionStorage.getItem('user');
+        const initialUserData = storedUser ? JSON.parse(storedUser) : null;
+
+        if(initialUserData){
+            setToken(true);
+        }
 
         const fetchDoctors = async () => {
             try {

@@ -1,149 +1,299 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import './DoctorPanel.css';
+import React, { useEffect, useState,useContext } from "react";
+import { useParams } from "react-router-dom";
+import "./DoctorPanel.css";
+import {
+  getDoctorAppointments,
+  updateBookingStatus,
+  getDoctorById
+} from "../../services/AllAPIs";
 
-const initialAppointmentsData = [
-    { id: 1, patient: 'John Doe', age: 30, dateTime: '7 Dec 2024, 05:00 PM', fees: '$900', accepted: false },
-    { id: 2, patient: 'Jane Smith', age: 25, dateTime: '8 Dec 2024, 10:30 AM', fees: '$660', accepted: false },
-    { id: 3, patient: 'Rocky', age: 33, dateTime: '6 Dec 2014, 05:00 PM', fees: '$160', accepted: false },
-    { id: 4, patient: 'Kevin', age: 24, dateTime: '1 Dec 2021, 10:30 AM', fees: '$600', accepted: false },
-    { id: 5, patient: 'Brad', age: 38, dateTime: '12 Dec 2022, 05:00 PM', fees: '$540', accepted: false },
-    { id: 6, patient: 'Henry', age: 23, dateTime: '18 Dec 2015, 10:30 AM', fees: '$350', accepted: false },
-    { id: 7, patient: 'Steve', age: 36, dateTime: '10 Dec 2013, 05:00 PM', fees: '$480', accepted: false },
-    { id: 8, patient: 'Rohit', age: 26, dateTime: '20 Dec 2014, 10:30 AM', fees: '$790', accepted: false },
-    // Add more appointments as needed
-];
+import { AppContext } from '../../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 const DoctorPanel = () => {
-    const { doctorId } = useParams();
-    const [appointments, setAppointments] = useState(initialAppointmentsData);
-    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const [appointmentToReject, setAppointmentToReject] = useState(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [doctorName, setDoctorName] = useState("");
+  const { setToken } = useContext(AppContext);
+  const [appointments, setAppointments] = useState([]);
+  const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [showAcceptDialog, setShowAcceptDialog] = useState(false);
+  const [appointmentToReject, setAppointmentToReject] = useState(null);
+  const [appointmentToAccept, setAppointmentToAccept] = useState(null);
 
-    const handleAccept = (id) => {
-        setAppointments((prevAppointments) =>
-            prevAppointments.map((appointment) =>
-                appointment.id === id ? { ...appointment, accepted: true } : appointment
-            )
-        );
-    };
+  useEffect(() => {
+    fetchDoctorDetails();
+    fetchAppointments();
+  }, [id]);
 
-    const openRejectDialog = (id) => {
-        setAppointmentToReject(id);
-        setShowConfirmDialog(true);
-    };
+  useEffect(() => {
+    // Check if admin is in sessionStorage
+    const storedUser = sessionStorage.getItem('doctor');
+    const initialUserData = storedUser ? JSON.parse(storedUser) : null;
 
-    const closeRejectDialog = () => {
-        setShowConfirmDialog(false);
-        setAppointmentToReject(null);
-    };
+    if (initialUserData === null) {
+      setToken(false); // No admin found, set token to false
+      navigate('/login'); // Optionally, redirect to login page
+    } else {
+      setToken(true); // Admin found, set token to true
+      
+    }
+  }, [setToken, navigate]);
 
-    const confirmReject = () => {
-        setAppointments((prevAppointments) =>
-            prevAppointments.filter((appointment) => appointment.id !== appointmentToReject)
-        );
-        closeRejectDialog();
-    };
+  const fetchDoctorDetails = async () => {
+    try {
+        const response = await getDoctorById(id);
+        // const data = await response.json();
+        // console.log(response);
+        // Handle the fetched data
+        setDoctorName(response.doctorName);
+    } catch (error) {
+        console.error('Error fetching doctor details:', error);
+    }
+};
 
-    const acceptedAppointments = appointments.filter(appointment => appointment.accepted);
-    const totalPatients = acceptedAppointments.length;
+  const fetchAppointments = async () => {
+    try {
+      const data = await getDoctorAppointments(id);
+      setAppointments(data);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
 
-    return (
-        <div className="doctor-panel">
-            <header className="doctor-panel-header">
-                <h1>Doctor Panel</h1>
-                <p>Welcome, {doctorId}</p>
-            </header>
-            <div className="stats-card">
-                <h2><b>Accepted Appointments</b></h2>
-                <span>{totalPatients}</span>
+  const handleStatusUpdate = async (bookingId, status) => {
+    try {
+      await updateBookingStatus(bookingId, status);
+      fetchAppointments(); // Refresh the list after updating
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+    }
+  };
+
+  const openRejectDialog = (bookingId) => {
+    setAppointmentToReject(bookingId);
+    setShowRejectDialog(true);
+  };
+
+  const closeRejectDialog = () => {
+    setShowRejectDialog(false);
+    setAppointmentToReject(null);
+  };
+
+  const confirmReject = () => {
+    if (appointmentToReject) {
+      handleStatusUpdate(appointmentToReject, "REJECTED");
+    }
+    closeRejectDialog();
+  };
+
+  const openAcceptDialog = (bookingId) => {
+    setAppointmentToAccept(bookingId);
+    setShowAcceptDialog(true);
+  };
+
+  const closeAcceptDialog = () => {
+    setShowAcceptDialog(false);
+    setAppointmentToAccept(null);
+  };
+
+  const confirmAccept = () => {
+    if (appointmentToAccept) {
+      handleStatusUpdate(appointmentToAccept, "ACCEPTED");
+    }
+    closeAcceptDialog();
+  };
+
+  const acceptedAppointments = appointments.filter(
+    (appointment) => appointment.status === "ACCEPTED"
+  );
+
+  const pendingAppointments = appointments.filter(
+    (appointment) => !appointment.status || appointment.status === "Pending"
+  );
+
+  const rejectedAppointments = appointments.filter(
+    (appointment) => appointment.status === "REJECTED"
+  );
+
+  return (
+    <div className="doctor-panel">
+      <header className="doctor-panel-header">
+        <h1>Doctor Panel</h1>
+        <p>Welcome {doctorName}</p>
+      </header>
+
+      <div className="stats-card">
+        <h2>Accepted Appointments</h2>
+        <span>{acceptedAppointments.length}</span>
+      </div>
+
+      <h2 className="table-heading">Pending Appointments</h2>
+      <table className="appointments-table">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Patient Name</th>
+            <th>Patient Email</th>
+            <th>Patient DOB</th>
+            <th>Patient Phone</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pendingAppointments.length > 0 ? (
+            pendingAppointments.map((appointment) => (
+              <tr key={appointment.bookingId}>
+                <td>{appointment.bookingId}</td>
+                <td>{appointment.date}</td>
+                <td>{appointment.time}</td>
+                <td>{appointment.patientName}</td>
+                <td>{appointment.patientEmail}</td>
+                <td>{appointment.patientDob}</td>
+                <td>{appointment.patientPhone}</td>
+                <td>{appointment.status || "Pending"}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button
+                      className="accept-button"
+                      onClick={() => openAcceptDialog(appointment.bookingId)}
+                    >
+                      ✓
+                    </button>
+                    <button
+                      className="reject-button"
+                      onClick={() => openRejectDialog(appointment.bookingId)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="9" className="no-data">
+                No pending appointments found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      <h2 className="table-heading">Accepted Appointments</h2>
+      <table className="appointments-table">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Patient Name</th>
+            <th>Patient Email</th>
+            <th>Patient DOB</th>
+            <th>Patient Phone</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {acceptedAppointments.length > 0 ? (
+            acceptedAppointments.map((appointment) => (
+              <tr key={appointment.bookingId}>
+                <td>{appointment.bookingId}</td>
+                <td>{appointment.date}</td>
+                <td>{appointment.time}</td>
+                <td>{appointment.patientName}</td>
+                <td>{appointment.patientEmail}</td>
+                <td>{appointment.patientDob}</td>
+                <td>{appointment.patientPhone}</td>
+                <td className="status-accepted">{appointment.status}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="8" className="no-data">
+                No accepted appointments found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      <h2 className="table-heading">Rejected Appointments</h2>
+      <table className="appointments-table">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Patient Name</th>
+            <th>Patient Email</th>
+            <th>Patient DOB</th>
+            <th>Patient Phone</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rejectedAppointments.length > 0 ? (
+            rejectedAppointments.map((appointment) => (
+              <tr key={appointment.bookingId}>
+                <td>{appointment.bookingId}</td>
+                <td>{appointment.date}</td>
+                <td>{appointment.time}</td>
+                <td>{appointment.patientName}</td>
+                <td>{appointment.patientEmail}</td>
+                <td>{appointment.patientDob}</td>
+                <td>{appointment.patientPhone}</td>
+                <td className="status-rejected">{appointment.status}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="8" className="no-data">
+                No rejected appointments found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* Confirmation Dialog for Rejection */}
+      {showRejectDialog && (
+        <div className="confirm-dialog-overlay">
+          <div className="confirm-dialog">
+            <p>Are you sure you want to reject this appointment?</p>
+            <div className="dialog-buttons">
+              <button className="dialog-button-yes" onClick={confirmReject}>
+                Yes
+              </button>
+              <button className="dialog-button-no" onClick={closeRejectDialog}>
+                No
+              </button>
             </div>
-            <h2 className="table-heading"><b>Pending Appointments</b></h2>
-            <br />
-            <table className="appointments-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Patient</th>
-                        <th>Age</th>
-                        <th>Date & Time</th>
-                        <th>Fees</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {appointments
-                        .filter(appointment => !appointment.accepted)
-                        .map((appointment, index) => (
-                            <tr key={appointment.id}>
-                                <td>{index + 1}</td>
-                                <td>{appointment.patient}</td>
-                                <td>{appointment.age}</td>
-                                <td>{appointment.dateTime}</td>
-                                <td>{appointment.fees}</td>
-                                <td>
-                                    <div className="action-buttons">
-                                        <button
-                                            className="accept-button"
-                                            onClick={() => handleAccept(appointment.id)}
-                                        >
-                                            ✓
-                                        </button>
-                                        <button
-                                            className="reject-button"
-                                            onClick={() => openRejectDialog(appointment.id)}
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                </tbody>
-            </table>
-            <h2 className="table-heading"><b>Accepted Queue</b></h2>
-            <br />
-            <table className="appointments-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Patient</th>
-                        <th>Age</th>
-                        <th>Date & Time</th>
-                        <th>Fees</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {acceptedAppointments.map((appointment, index) => (
-                        <tr key={appointment.id}>
-                            <td>{index + 1}</td>
-                            <td>{appointment.patient}</td>
-                            <td>{appointment.age}</td>
-                            <td>{appointment.dateTime}</td>
-                            <td>{appointment.fees}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* Confirmation Dialog */}
-            {showConfirmDialog && (
-                <div className="confirm-dialog-overlay">
-                    <div className="confirm-dialog">
-                        <p>Do you want to reject this patient?</p>
-                        <div className="dialog-buttons">
-                            <button className="dialog-button-yes" onClick={confirmReject}>
-                                Yes
-                            </button>
-                            <button className="dialog-button-no" onClick={closeRejectDialog}>
-                                No
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+          </div>
         </div>
-    );
+      )}
+
+      {/* Confirmation Dialog for Acceptance */}
+      {showAcceptDialog && (
+        <div className="confirm-dialog-overlay">
+          <div className="confirm-dialog">
+            <p>Are you sure you want to accept the appointment for {appointmentToAccept?.patientName}?</p>
+            <div className="dialog-buttons">
+              <button className="dialog-button-yes" onClick={confirmAccept}>
+                Yes
+              </button>
+              <button className="dialog-button-no" onClick={closeAcceptDialog}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default DoctorPanel;

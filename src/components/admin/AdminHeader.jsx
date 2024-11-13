@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { assets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../context/AppContext';
 
 const AdminHeader = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const [token, setToken] = useState(true);  // Simulating logged-in state
+  
+  // Use context to get token and setToken function from AppContext
+  const { token, setToken } = useContext(AppContext);  // Access token and setToken from context
 
   const handleLogout = () => {
-    setToken(false);  // Simulate logout
+    sessionStorage.clear();  // Clear session storage
+    setToken(false);  // Update token to false in context
     navigate('/login'); // Redirect to login page after logout
   };
 

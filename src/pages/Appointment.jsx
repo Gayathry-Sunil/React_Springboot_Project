@@ -87,7 +87,12 @@ const Appointment = () => {
     };
 
     useEffect(() => {
-        setToken(true);
+        const storedUser = sessionStorage.getItem('user');
+        const initialUserData = storedUser ? JSON.parse(storedUser) : null;
+
+        if(initialUserData){
+            setToken(true);
+        }
     }, [setToken]);
 
     useEffect(() => {
@@ -101,6 +106,12 @@ const Appointment = () => {
     }, [docInfo]);
 
     const handleBooking = async () => {
+
+        if (docSlots.length === 0 || !slotTime) {
+            alert('Please select both a date and time for the appointment.');
+            return;
+        }
+
         try {
             const date = docSlots[slotIndex][0].datetime.toISOString().split('T')[0];
             const time = slotTime;
@@ -160,7 +171,7 @@ const Appointment = () => {
                     </p>
                     <div className='flex items-center gap-2 text-sm mt-1 text-gray-600'>
                         <p>{docInfo.degree} - {docInfo.speciality}</p>
-                        <button className='py-0.5 px-2 border text-xs rounded-full'>{docInfo.experience}</button>
+                        <button className='py-0.5 px-2 border text-xs rounded-full'>{docInfo.experience} Years</button>
                     </div>
 
                     <div>
@@ -170,7 +181,7 @@ const Appointment = () => {
                         <p className='text-sm text-gray-500 max-w-[700px] mt-1'>{docInfo.about}</p>
                     </div>
                     <p className='text-gray-500 font-medium mt-4'>
-                        Appointment Fee: <span className='text-gray-600'>{currencySymbol}{docInfo.fees}</span>
+                        Appointment Fee: <span className='text-gray-600'>{currencySymbol} {docInfo.fees}</span>
                     </p>
                 </div>
             </div>

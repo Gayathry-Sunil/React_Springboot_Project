@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminPanel.css';
-import { getDoctors, deleteDoctor } from '../../services/AllAPIs';
+import { getDoctors, deleteDoctor, getDoctorAppointments } from '../../services/AllAPIs';
+import { AppContext } from '../../context/AppContext';
 
 const DoctorList = () => {
   const [doctorList, setDoctorList] = useState([]);
+  const { setToken } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -27,12 +29,19 @@ const DoctorList = () => {
   const handleDelete = async (id, doctorName) => {
     // Ask for confirmation before deleting
     const confirmDelete = window.confirm(`Do you want to delete ${doctorName}?`);
-
+  
     if (confirmDelete) {
       try {
-        const response = await deleteDoctor(id);
-        alert("Deleted Successfully");
-        fetchDoctors();  // Refresh the doctor list after deletion
+        const deletionResponse = await getDoctorAppointments(id);
+  
+        // Check if the array has any bookings
+        if (deletionResponse && deletionResponse.length > 0) {
+          alert("This doctor has bookings.");
+        } else {
+          const response = await deleteDoctor(id);
+          alert("Deleted Successfully");
+          fetchDoctors();  // Refresh the doctor list after deletion
+        }
       } catch (error) {
         alert("Error deleting doctor.");
       }
@@ -41,8 +50,18 @@ const DoctorList = () => {
 
   // Fetch doctors when the component mounts
   useEffect(() => {
-    fetchDoctors();
-  }, []);
+    // Check if admin is in sessionStorage
+    const storedUser = sessionStorage.getItem('admin');
+    const initialUserData = storedUser ? JSON.parse(storedUser) : null;
+
+    if (initialUserData === null) {
+      setToken(false); // No admin found, set token to false
+      navigate('/login'); // Optionally, redirect to login page
+    } else {
+      setToken(true); // Admin found, set token to true
+      fetchDoctors(); // Fetch doctors only if admin exists
+    }
+  }, [setToken, navigate]);
 
   // Display loading or error message if needed
   if (loading) return <p>Loading doctors...</p>;
@@ -67,7 +86,6 @@ const DoctorList = () => {
                 <p className='text-gray-600 text-sm'>{item.doctorExperience} years experience</p>
                 <p className='text-gray-600 text-sm'>Fees: {item.doctorFees}</p>
                 <div className="flex gap-2 mt-2">
-                  
                   <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onClick={() => handleDelete(item.id, item.doctorName)}>Delete</button>
                 </div>
               </div>

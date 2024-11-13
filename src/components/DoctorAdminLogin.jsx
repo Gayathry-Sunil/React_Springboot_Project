@@ -1,29 +1,68 @@
-// DoctorAdminLogin.jsx
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import {checkDoctor} from '../services/AllAPIs';
+import { checkDoctor } from '../services/AllAPIs';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import the eye icons
 
 const DoctorAdminLogin = () => {
     const navigate = useNavigate();
     const { setToken } = useContext(AppContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // State for password visibility
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     const handleLogin = async () => {
-        // Dummy hardcoded admin credentials
-        if (email === "admin@example.com" && password === "1234") {
-            navigate("/admin/dashboard"); // Admin dashboard route
-        } else {
-            
+        setError(''); // Clear previous errors
 
+        // Validation checks
+        if (!email || !password) {
+            setError("Both email and password are required.");
+            return;
+        }
+        if (!validateEmail(email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
+        
+        if (email === "admin@gmail.com" && password === "1234") {
+            sessionStorage.setItem('admin', JSON.stringify(email));
+            setToken(true); 
+            navigate("/admin/doctors-list"); // Admin dashboard route
+        } else {
             // Uncomment and replace with actual API call for checking doctor credentials
             const response = await checkDoctor(email, password);
             if (response) {
-                navigate(`/doctor/${response.id}/appointments`); // Redirect to doctor's appointments page
+                sessionStorage.setItem('doctor', JSON.stringify(email));
+                setToken(true); 
+                navigate(`/doctor/${response.id}/appointments`);
             } else {
-                alert("Invalid credentials");
+                setError("Invalid credentials. Please try again.");
             }
+        }
+    };
+
+    // Reset error on input change
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        if (error) setError(''); // Clear error when user types
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        if (error) setError(''); // Clear error when user types
+    };
+
+    // Handle Enter key press
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleLogin();  // Trigger login on Enter key press
         }
     };
 
@@ -39,23 +78,38 @@ const DoctorAdminLogin = () => {
                         id="email"
                         className='border border-zinc-300 rounded w-full p-2 mt-1'
                         type="email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={handleEmailChange}
                         value={email}
+                        onKeyDown={handleKeyPress}  // Trigger login on Enter key press
                         required
                     />
                 </div>
 
-                <div className='w-full'>
+                <div className='w-full relative'>
                     <label htmlFor="password" className='text-sm font-medium'>Password</label>
                     <input
                         id="password"
                         className='border border-zinc-300 rounded w-full p-2 mt-1'
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        type={showPassword ? 'text' : 'password'}  // Toggle password visibility
+                        onChange={handlePasswordChange}
                         value={password}
+                        onKeyDown={handleKeyPress}  // Trigger login on Enter key press
                         required
                     />
+                    {/* Eye icon */}
+                    <span
+                        className="absolute right-2 top-[70%] transform -translate-y-1/2 cursor-pointer"
+                        onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Eye icon toggle */}
+                    </span>
                 </div>
+
+                {error && (
+                    <div className="text-red-500 text-sm mt-2">
+                        {error}
+                    </div>
+                )}
 
                 <button
                     type="button"

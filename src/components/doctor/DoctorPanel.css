@@ -1,137 +1,168 @@
 .doctor-panel {
-    padding: 20px;
-    background-color: #f9f9fc;
+  padding: 20px;
+  background-color: #f9f9fc;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
 .doctor-panel-header {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #4f46e5;
+  font-weight: 600;
 }
 
 .stats-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 18px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333;
 }
 
 .appointments-table {
-    width: 100%;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-collapse: collapse;
-    overflow: hidden;
-    margin-bottom: 20px;
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
-.appointments-table th, .appointments-table td {
-    padding: 12px 20px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
+.appointments-table th,
+.appointments-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  font-size: 16px;
 }
 
 .appointments-table th {
-    background-color: #f3f4f6;
-    font-weight: 600;
-    color: #4f46e5;
+  background-color: #f3f4f6;
+  color: #4f46e5;
+  font-weight: 600;
 }
 
-.appointments-table tr:last-child td {
-    border-bottom: none;
-}
-
-/* Action buttons */
 .action-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
-.action-buttons button {
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
+.accept-button,
+.reject-button {
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s ease, transform 0.2s;
 }
 
 .accept-button {
-    background-color: #34d399; /* Green */
-    color: white;
-    transition: background-color 0.2s;
-}
-
-.accept-button:hover {
-    background-color: #2bb07b;
+  background-color: #34d399;
 }
 
 .reject-button {
-    background-color: #f87171; /* Red */
-    color: white;
-    transition: background-color 0.2s;
+  background-color: #f87171;
+}
+
+.accept-button:hover {
+  background-color: #2dbf88;
+  transform: scale(1.1);
 }
 
 .reject-button:hover {
-    background-color: #e63946;
+  background-color: #e05757;
+  transform: scale(1.1);
 }
 
+/* Dialog Overlay */
 .confirm-dialog-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
+/* Dialog Box */
 .confirm-dialog {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  animation: scaleIn 0.3s ease forwards;
 }
 
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.confirm-dialog p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Dialog Buttons */
 .dialog-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.dialog-button-yes,
+.dialog-button-no {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .dialog-button-yes {
-    background-color: #f56565;
-    color: white;
-    padding: 5px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: #34d399;
 }
 
 .dialog-button-no {
-    background-color: #a0aec0;
-    color: white;
-    padding: 5px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: #f87171;
 }
 
-
-/* DoctorPanel.css */
-.doctor-panel {
-    padding: 20px;
-    background-color: #f9f9fc;
-    margin-left: auto; /* Center-align within the available space */
-    margin-right: auto;
-    max-width: 1200px; /* Add a max-width to avoid it stretching too wide */
+.dialog-button-yes:hover {
+  background-color: #2dbf88;
 }
 
-.table-heading {
-    font-size: larger;
+.dialog-button-no:hover {
+  background-color: #e05757;
 }
+
+.status-rejected {
+  color: red;
+  font-weight: bold;
+}
+
+.status-accepted {
+  color: green;
+  font-weight: bold;
+}
+
