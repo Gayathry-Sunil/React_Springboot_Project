@@ -14,6 +14,7 @@ import Footer from './components/Footer';
 import Admin from './pages/Admin';
 import DoctorAdminLogin from './components/DoctorAdminLogin';
 import DoctorPage from './pages/DoctorPage';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 const App = () => {

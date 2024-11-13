@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import './AddDoctorForm.css';
 import { saveDoctor } from '../../services/AllAPIs';
+import { AppContext } from '../../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 function AddDoctorForm() {
   const [form, setForm] = useState({
@@ -16,6 +18,11 @@ function AddDoctorForm() {
     aboutDoctor: '',
     picture: null
   });
+
+
+  const { setToken } = useContext(AppContext);
+  
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -58,6 +65,20 @@ function AddDoctorForm() {
   useEffect(() => {
     validateForm();
   }, [form, touched]);
+
+  useEffect(() => {
+    // Check if admin is in sessionStorage
+    const storedUser = sessionStorage.getItem('admin');
+    const initialUserData = storedUser ? JSON.parse(storedUser) : null;
+
+    if (initialUserData === null) {
+      setToken(false); // No admin found, set token to false
+      navigate('/login'); // Optionally, redirect to login page
+    } else {
+      setToken(true); // Admin found, set token to true
+      
+    }
+  }, [setToken, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

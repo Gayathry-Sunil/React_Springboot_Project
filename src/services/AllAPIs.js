@@ -107,3 +107,35 @@ export const getDoctorById = async (docId) => {
 
 
 
+
+
+
+  export const getDoctorAppointments = async (docId) => {
+    const response = await CommonAPIs(
+      "GET",
+      `${serverUrl}/book/getappoinments/${docId}`
+    );
+    return response.data;
+  };
+  
+  export const updateBookingStatus = async (bookingId, status) => {
+    const response = await CommonAPIs(
+      "PUT",
+      `${serverUrl}/book/updatestatus/${bookingId}/status?status=${status}`
+    );
+    return response.data;
+  };
+
+
+  // export const fetchDoctorDetails = async (doctorId) => {
+  //   try {
+  //     const response = await CommonAPIs("GET", `${serverUrl}/doctor/check?email=${emailId}&password=${Password}`);
+  //     return response.json();
+  //   } catch (error) {
+  //     console.error("Error fetching doctor details:", error);
+  //     throw error;
+  //   }
+  // };
+
+
+
